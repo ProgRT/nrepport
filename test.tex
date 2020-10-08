@@ -1,0 +1,194 @@
+\documentclass{nrepport}
+\usepackage{fzm}
+
+\title{FZV-LC 2020-08-19 test session}
+\author{\nsignf}
+
+%\client{\includegraphics[width=4cm]{/home/nicolas/Documents/FZ/Utils/fzm}}
+\client{\fzm[width=3.5cm]}
+\model{FZV-LC}
+\mode{CMV-VC\newline CMV-PC}
+\testtype{Basic observation}
+\testdate{2020-08-19}
+
+\def\tp{$T_{pause}$}
+
+\begin{document}
+\tpblock
+\maketitle
+%\testidblock
+
+\tableofcontents
+
+\section*{Key findings}
+
+\begin{itemize}
+	\item Inspiratory time ($T_i$) and pause time ($T_{pause}$) settings
+		works exactly as expected. \emph{Great job !}
+	\item The setting of a \tp\ has a significant impact on the accuracy of
+		tidal volume. Pause time increasing tidal volume by as high as
+		13 \%. The test protocol will have to take this into account.
+	\item Is seems feasible to provide the user with a \emph{plateau
+		pressure} readout, which in my opinion would be a major selling
+		point.
+	\item The lower limit on i:e ratio (1:4) is inadequate. It results
+		in imposing a minimal frequency for a set $T_i$, which is neither
+		clinically or technically relevant.
+	\item Triggering in CMV-VC is still problematic.
+	\item Increments of 5 hPa is to gross for PC setting. Increment
+		should be 1 hPa.
+	\item The ventilator crashed several times in PC. This represent a
+		major patient safety issue.
+	\item There seems to be a leak at the PEEP valve.
+\end{itemize}
+
+\cleardoublepage
+
+\section{Inspiratory time}
+
+With the folowing parameters:
+
+\marginpar{%
+	\centering
+\begin{tabular}{ll}
+	\hline
+	PEEP & 11\\
+	Tidal volume & 500\\
+	Frequency & 8\\
+	Inspiratory time & 1.5\\
+	Vt calibration factor & 0.95\\
+	R & 5\\
+	C & 75\\
+	\hline
+\end{tabular}}
+
+\begin{itemize}
+\item There is still a \emph{minimal} I:E of 1:4. I dont see any
+clinical justification for a minimal I:E. With a Ti of 1, i am unable
+to go below 12 of frequency. Putting a Ti of 1.5 allow me to lower
+frequency to 8.
+
+\item In the absence of an expiratory flowmeter, it is impossible to
+	visualise the presence or absence of an inspiratory hold on the flow
+	signal.
+\item Pressure signal sugest there may be a minimal inspiratory
+	hold.
+\item Visually, the compressor seems to go up as soo as it reache
+	the bottom, which is the correct behavior.
+
+\item Vt oscillating between 523 and 554 are read from the
+	inspiratory flow sensor.
+
+\item Frequency over 1 min is acurate.
+
+\item The compressor return velocity seems to be dependant on
+	inspiratory velocity. It would seems whise that the return (upward)
+		be alwais as fast as possible, to be ready for the next
+		insuflation.
+\end{itemize}
+
+With an added inspiratory hold of 0.7 sec,
+
+\begin{itemize}
+	\item Tidal volume increased to 640.
+	\item Total inspiratory time is still around 1.5 sec. (validated by
+		stopwatch).
+	\item setting the Vt calibration factor to .82 allowed to obtain a
+		Vt of 506.
+\end{itemize}
+
+\section{Triggering}
+
+In CMV-VC, spontaneous respiratory efforts generated negative PEEPS
+readouts (as low as -35). It seems likely the reason we have not been
+able to trigger more than two consecutive breath cycle.
+
+I suggest that you consider fixing this issue by allowing the user to
+input the	\emph{intended PEEP} in the user interface.	This value will
+then be use instead of the PEEP readouts for triggering threshold
+calculation.
+
+\emph{The user interface will have to make clear the fact
+that intended PEEP does not sets the PEEP, which still have to be set
+mechanicaly at the PEEP valve}
+
+Another possible solutions would be to exclude cycles with patient
+efforts from PEEP readout. But this approach would bring the problem
+of differentiating real efforts from changes in PEEP settings.
+
+\section{CMV-PC}
+
+\begin{itemize}
+		\begin{figure}
+			%\includegraphics[width=\textwidth]{PCcrash}
+			\caption{The software crashed several times in CMV-PC mode. The
+			ventilation stopped at the time of crash and the ventilator had
+			to be reboot.}
+		\end{figure}
+
+	\item The software crashed several times while testing CMV-PC mode.
+		This prevented us from extensively testing this mode.
+	\item The ventilation stopped at the time of softhware crash, making
+		it a {\bf major thread for patient safety}.
+	\item A PC level of 20 hPa was acurately delivered by the
+		ventilator.
+	\item The ventilator was unable to deliver a PC of 40 hPa (about 30
+		hPa delivered).
+	\item This limitation was not caused by a completely compressed
+		ambu bag.
+	\item Increments of 5 hPa is a to gross setting. Increment should be
+		1 hPa.
+	\item The compressor had a clumsy movement, during bot compression
+		and release (upward), which it does not have in in CMV-VC.
+\end{itemize}
+
+\section{User interface and interaction}
+
+\begin{itemize}
+	\item The need for two confirmation for every changes of parameter
+		is kind of \emph{overkill}-in my opinion- and may leads to user
+		confusion.
+	\item The flowrate display in the \emph{READOUTS, SETTINGS and
+		ALLARMS} tabs is of no use.
+	\item Waveforms are missing an identification and unit of
+			measurement.
+	\item \emph{Stop device} is ambiguous. \emph{Stop ventilation} would
+		avoid confusion.
+	\item The scales of the graphic display is suboptimal in many ways.
+		\emph{Would need a little bit of loving care!}
+\end{itemize}
+
+\section{Suggested improvements}
+
+\subsection{Plateau pressure}
+
+\def\pplat{$P_{plat.}$}
+
+The fact that the ventilator is able to deliver and control an
+inspiratory hold time bring the possibility to provide plateau
+pressure (\pplat) readout. \pplat is the pressure read during an
+inspiratory hold (plateau). It is considered a reflect the force
+needed to maintain the tidal volume in the lung.
+
+Monitoring and limiting \pplat\ is a major concern in the ventilation
+of the most critical patient. Providing this information to the user
+would then seems to us like a very relevant feature for your
+ventilator.
+
+Technically, it seems as simple as reading the pressure some few
+milliseconds before the end of the inspiratory pause time, when such a
+pause time have been set by the user.
+
+\subsection{Compressor return velocity}
+
+The compressor return velocity (upward) seems to be set at the same
+value as the compression velocity (downward). This means that longer
+inspiratory time result in longer compressor return time. And this
+means less time where the compressor is up and ready to respond to a
+patient trigger.
+
+I then suggest that, no mater the speed used for inspiratory time, the
+compressor should always use the highest possible speed for it's
+return to his waiting position (within the
+limits of what is safe for the hardware).
+\end{document}
